@@ -60,17 +60,26 @@ const App = () => {
     } else {
       const newObject = { name: newName, number: newNumber };
 
-      personService.create(newObject).then((response) => {
-        setPersons(persons.concat(response.data));
-        setNewName("");
-        setNewNumber("");
+      personService
+        .create(newObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+          setNewName("");
+          setNewNumber("");
 
-        setMessage(`Added ${newName}`);
-        setMessageType("ok");
-        setTimeout(() => {
-          setMessage(null);
-        }, 3000);
-      });
+          setMessage(`Added ${newName}`);
+          setMessageType("ok");
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          setMessage(error.response.data.error);
+          setMessageType("error");
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
+        });
     }
   };
 
