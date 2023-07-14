@@ -13,9 +13,11 @@ blogsRouter.get('/', async (req, res) => {
 
 //add blog
 blogsRouter.post('/', async (req, res) => {
-
+  console.log(req.body, req.user)
   const user = await User.findById(req.user)
-
+  if(!user){
+    res.status(400).json({ error: 'invalid token' })
+  }
   const blog = new Blog({
     title: req.body.title,
     author: req.body.author,
