@@ -26,23 +26,24 @@ test('renders blog title and author', () => {
   expect(element).toBeDefined()
 })
 
-test('displays blog URL and likes when button is clicked', async () => {
+test('calls the like event handler twice when the like button is clicked twice', () => {
   const blog = {
     title: 'Test Blog',
     author: 'John Doe',
-    url: 'https://example.com',
-    likes: 10,
-    user: { username: 'John Doe' }
+    likes: 5,
   }
 
-  render(<Blog blog={blog} user={ { username: 'john' } }/>)
-  const user = userEvent.setup()
+  const handleLike = jest.fn()
+  const handleDelete = jest.fn()
 
-  await user.click(screen.getByText('show'))
+  render(<Blog blog={blog} handleLike={handleLike} user={{ name:'john' }} handleDelete={handleDelete} />)
 
-  const element = screen.getByText((content, element) => {
-    return content.includes('John Doe') && element.tagName.toLowerCase() === 'div'
-  })
+  const button = screen.getByText('show')
+  userEvent.click(button)
 
-  expect(element).toBeDefined()
+  const likeButton = screen.getByText('like')
+  userEvent.click(likeButton)
+  userEvent.click(likeButton)
+
+  expect(handleLike).toHaveBeenCalledTimes(2)
 })
